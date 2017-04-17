@@ -102,4 +102,6 @@ class DbMigration2:
             self._postgres_conn.close()
 
 
-    #def get_prepared_script(self, template, ):
+    def get_prepared_script(self, template):
+        pass
+
