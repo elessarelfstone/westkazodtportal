@@ -139,7 +139,7 @@ class DbMigration2:
     def main(self):
         try:
             self.export_abonents()
-            self.fill_abn_column()
+            self.fill_all_abn_columns()
         finally:
             self._oracle_conn.close()
             self._postgres_conn.close()
