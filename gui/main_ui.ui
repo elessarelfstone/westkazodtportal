@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainForm</class>
+ <widget class="QMainWindow" name="MainForm">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>816</width>
+    <height>625</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>Консоль системы отчетности</string>
+  </property>
+  <widget class="QWidget" name="centralwidget"/>
+  <widget class="QMenuBar" name="menubar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>816</width>
+     <height>18</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="actAllActions">
+    <property name="title">
+     <string>Действия</string>
+    </property>
+    <addaction name="actStorageManager"/>
+   </widget>
+   <addaction name="actAllActions"/>
+  </widget>
+  <widget class="QStatusBar" name="statusbar"/>
+  <action name="actStorageManager">
+   <property name="text">
+    <string>Менеджер хранилища</string>
+   </property>
+  </action>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>

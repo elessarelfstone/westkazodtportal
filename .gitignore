@@ -1,3 +1,6 @@
 migration/.idea
+gui/.idea
+.idea
 migration/storage.log
 migration/__pycache__
+gui/__pycache__

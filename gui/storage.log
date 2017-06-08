@@ -1,0 +1,15 @@
+2017-05-30 16:35:48,124 Telecom_Storage ERROR    Секции отсутсвуют
+Traceback (most recent call last):
+  File "D:\Projects\telecom\westkazportal\migration\db.py", line 54, in __init__
+    raise Exception('Секции отсутсвуют')
+Exception: Секции отсутсвуют
+2017-05-30 16:41:15,713 Telecom_Storage ERROR    Секции отсутсвуют
+Traceback (most recent call last):
+  File "D:\Projects\telecom\westkazportal\migration\db.py", line 54, in __init__
+    raise Exception('Секции отсутсвуют')
+Exception: Секции отсутсвуют
+2017-05-30 16:43:49,655 Telecom_Storage ERROR    Секции отсутсвуют
+Traceback (most recent call last):
+  File "D:\Projects\telecom\westkazportal\migration\db.py", line 54, in __init__
+    raise Exception('Секции отсутсвуют')
+Exception: Секции отсутсвуют

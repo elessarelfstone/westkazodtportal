@@ -1,68 +1,8 @@
-import cx_Oracle
-import psycopg2
-from configparser import ConfigParser
-import logging
+import db
 
-class DbMigration2:
-
-    def __init__(self, settings):
-
-        """
-         получение параметров подключений у обеих баз из ini файла
-         установка подключений
-         установка праметров логирования
-
-        """
-
-        # настройка логирования
-        self._application_name = "Telecom_Storage"
-        self.logger = logging.getLogger(self._application_name)
-        self.logger.setLevel(logging.INFO)
-
-        formatter = logging.Formatter('%(asctime)s %(name)-12s %(levelname)-8s %(message)s')
-
-        file_handler = logging.FileHandler('storage.log')
-        file_handler.setLevel(logging.INFO)
-        file_handler.setFormatter(formatter)
-
-        console = logging.StreamHandler()
-        console.setLevel(logging.WARNING)
-        console.setFormatter(formatter)
-
-        self.logger.addHandler(console)
-        self.logger.addHandler(file_handler)
-
-        self.conditions = ()
-
-        try:
-            # получение настроек из ini файлов
-            parser = ConfigParser()
-            parser.read(settings)
-            _conn_oracle_sett = {}
-            _conn_postgres_sett = {}
-            if parser.has_section('oracle') and parser.has_section('postgres'):
-                params = parser.items('oracle')
-                for param in params:
-                    _conn_oracle_sett[param[0]] = param[1]
-                params = parser.items('postgres')
-                for param in params:
-                    _conn_postgres_sett[param[0]] = param[1]
-            else:
-                raise Exception('Секции отсуствуют')
-            self._conn_oracle_sett = _conn_oracle_sett
-            self._conn_postgres_sett = _conn_postgres_sett
-            # создание подключения к базе oracle
-
-            self._dsn = cx_Oracle.makedsn(self._conn_oracle_sett["host"], self._conn_oracle_sett["port"],
-                                      self._conn_oracle_sett["sid"])
-            self._oracle_conn = cx_Oracle.connect(self._conn_oracle_sett["user"], self._conn_oracle_sett["password"],
-                                              self._dsn)
-
-            self._conn_postgres_string = " ".join(["%s=%s" % (k, v) for k, v in self._conn_postgres_sett.items()])
-            # print(self._conn_string)
-            self._postgres_conn = psycopg2.connect(self._conn_postgres_string)
-        except Exception as e:
-            self.logger.exception(e)
+class DbMigration(db.DB):
+    def __init__(self, settings, conn_mode):
+        super(DbMigration, self).__init__(settings, conn_mode)
 
     def export_abonents(self):
         """ Производит заливку лицевых счетов из БИТТл в таблицы хранилища """
@@ -117,9 +57,10 @@ class DbMigration2:
         """ заливка всех колонок """
         try:
             # получаем скрипт выбоки всех колонок для заливки из файла
-            f = open('sql//pg_all_abn_columns.sql')
-            lines = f.readlines()
-            sql = ''.join(lines)
+            # f = open('sql//pg_all_abn_columns.sql')
+            # lines = f.readlines()
+            # sql = ''.join(lines)
+            sql = "select * from storage.view_storage_columns"
             pg_cur = self._postgres_conn.cursor()
             pg_cur.execute(sql)
             clmnames = [desc[0] for desc in pg_cur.description]
@@ -137,10 +78,10 @@ class DbMigration2:
             self.logger.exception(e)
 
     def main(self):
+        "Полный цикл работ. Обнуление, заливка абонентов, заливка данных"
         try:
             self.export_abonents()
             self.fill_all_abn_columns()
         finally:
             self._oracle_conn.close()
             self._postgres_conn.close()
-
